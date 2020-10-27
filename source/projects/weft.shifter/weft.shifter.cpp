@@ -48,9 +48,11 @@ public:
             {
                 lock lock {m_mutex};
                 if (inlet == 0) {
+                    m_sequence.clear();
                     m_sequence.reserve(m_sequence.size() + args.size());
                     m_sequence.insert(m_sequence.end(), args.begin(), args.end());
                 } else {
+                    m_shifts.clear();
                     m_shifts.reserve(m_shifts.size() + args.size());
                     m_shifts.insert(m_shifts.end(), args.begin(), args.end());
                 }
