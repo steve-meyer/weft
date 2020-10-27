@@ -12,11 +12,47 @@
 SCENARIO("object produces correct output") {
     ext_main(nullptr);    // every unit test must call ext_main() once to configure the class
 
-    GIVEN("A default instance of weft.shifter") {
+    GIVEN("An instance of weft.shifter") {
 
         test_wrapper<shifter> an_instance;
         shifter&             my_object = an_instance;
-        
+
+        WHEN("It is given a list containing a symbol") {
+
+            atoms sequence;
+            sequence.push_back(1);
+            sequence.push_back("string");
+            sequence.push_back(2);
+            my_object.list(sequence);
+            my_object.bang();
+
+            THEN("it does not update the sequence") {
+                auto& output = *c74::max::object_getoutput(my_object, 0);
+                REQUIRE(output.size() == 0);
+            }
+        }
+
+        WHEN("It is given a list containing a float") {
+
+            atoms sequence;
+            sequence.push_back(1);
+            sequence.push_back(2);
+            sequence.push_back(3.1456);
+            my_object.list(sequence);
+            my_object.bang();
+
+            THEN("it does not update the sequence") {
+                auto& output = *c74::max::object_getoutput(my_object, 0);
+                REQUIRE(output.size() == 0);
+            }
+        }
+    }
+
+    GIVEN("An instance of weft.shifter given a list of numbers") {
+
+        test_wrapper<shifter> an_instance;
+        shifter&             my_object = an_instance;
+
         // Seed the initial sequence
         my_object.list({ 1, 2, 3, 4 });
 
@@ -30,12 +66,12 @@ SCENARIO("object produces correct output") {
                 REQUIRE(output[0] == expected);
             }
         }
-        
+
         WHEN("a shift sequence is provided and it is banged") {
             atoms shift_seq = { 1, 0 };
             my_object.list(shift_seq, 1);
             my_object.bang();
-            
+
             THEN("the returned sequence has shifts applied") {
                 auto& output = *c74::max::object_getoutput(my_object, 0);
                 REQUIRE(output.size() == 1);
