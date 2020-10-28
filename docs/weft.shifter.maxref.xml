@@ -6,8 +6,8 @@
 
 <c74object name='weft.shifter' category='sequences,  transformations'>
 
-	<digest>Shift the elements in a sequence</digest>
-	<description>Shift the elements in a sequence. </description>
+	<digest>Shift a sequence of integers using another sequence based on simple vector addition</digest>
+	<description>Shift a sequence of integers using another sequence based on simple vector addition. </description>
 
 
 	<!--METADATA-->
@@ -31,8 +31,8 @@
 	<methodlist>
 
 		<method name='list'>
-			<digest>In left inlet, sets the primary sequence; in right inlet, sets the shift sequences that transforms the primary sequence</digest>
-			<description>In left inlet, sets the primary sequence; in right inlet, sets the shift sequences that transforms the primary sequence. </description>
+			<digest>In left inlet, sets the primary sequence; in right inlet, sets the shift sequence that transforms the primary sequence</digest>
+			<description>In left inlet, sets the primary sequence; in right inlet, sets the shift sequence that transforms the primary sequence. </description>
 		</method>
 
 		<method name='bang'>

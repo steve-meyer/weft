@@ -4,7 +4,7 @@
 ///	@licence	     Use of this source code is governed by the MIT License found in the License.md file.
 
 #include "c74_min.h"
-#include <cmath>
+#include "../weft.shared/weft.h"
 
 using namespace c74::min;
 
@@ -71,26 +71,6 @@ private:
     atoms m_sequence;
     atoms m_shifts;
     mutex m_mutex;
-
-    bool only_ints(atoms const &args) {
-        bool ints_only = true;
-        for (int i = 0; i < args.size(); i++)
-            try
-            {
-                float num = std::stof(args[i]);
-                if (std::floor(num) != num)
-                {
-                    ints_only = false;
-                    break;
-                }
-            }
-            catch (...)
-            {
-                ints_only = false;
-            }
-
-        return ints_only;
-    }
 };
 
 
