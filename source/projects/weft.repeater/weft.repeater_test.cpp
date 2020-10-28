@@ -70,5 +70,17 @@ SCENARIO("Object produces correct output") {
                 REQUIRE(output[0] == expected);
             }
         }
+
+        WHEN("it is given a repeater pattern that is longer than the sequence") {
+            my_object.list({1, 5});
+            my_object.list({2, 2, 1}, 1);
+            my_object.bang();
+            THEN("it only applies repeat steps for the primary sequence length") {
+                auto& output = *c74::max::object_getoutput(my_object, 0);
+                atoms expected = {1, 1, 5, 5};
+                REQUIRE(output.size() == 1);
+                REQUIRE(output[0] == expected);
+            }
+        }
     }
 }
