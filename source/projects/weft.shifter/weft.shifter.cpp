@@ -30,8 +30,10 @@ public:
             if (m_shifts.size() > 0) {
                 for (int i = 0; i < sequence_copy.size(); i++) {
                     int step = sequence_copy[i];
-                    int shift_step = m_shifts[i % m_shifts.size()];
-                    sequence_copy[i] = atom(step + shift_step);
+                    if (step != 0) {
+                        int shift_step = m_shifts[i % m_shifts.size()];
+                        sequence_copy[i] = atom(step + shift_step);
+                    }
                 }
             }
 

@@ -106,5 +106,42 @@ SCENARIO("object produces correct output") {
                 REQUIRE(output[0] == expected);
             }
         }
+
+        WHEN("it is given a shift sequence that is not a multiple of the sequence") {
+            my_object.list({1, 0, 1}, 1);
+            my_object.bang();
+            THEN("the resulting transformation uses a modulo/wrap around model") {
+                auto& output = *c74::max::object_getoutput(my_object, 0);
+                REQUIRE(output.size() == 1);
+                REQUIRE(output[0].size() == 4);
+                atoms expected = {2, 2, 4, 5};
+                REQUIRE(output[0] == expected);
+            }
+        }
+
+        WHEN("it is given a shift sequence that is longer than the primary sequence") {
+            my_object.list({1, 0, 1, 0, 1}, 1);
+            my_object.bang();
+            THEN("the resulting transformation uses a modulo/wrap around model") {
+                auto& output = *c74::max::object_getoutput(my_object, 0);
+                REQUIRE(output.size() == 1);
+                REQUIRE(output[0].size() == 4);
+                atoms expected = {2, 2, 4, 4};
+                REQUIRE(output[0] == expected);
+            }
+        }
+
+        WHEN("the primary sequences has 0-value rest steps") {
+            my_object.list({1, 0, 0, 0});
+            my_object.list({1, 0}, 1);
+            my_object.bang();
+            THEN("the resulting transformation does not modify the rests") {
+                auto& output = *c74::max::object_getoutput(my_object, 0);
+                REQUIRE(output.size() == 1);
+                REQUIRE(output[0].size() == 4);
+                atoms expected = {2, 0, 0, 0};
+                REQUIRE(output[0] == expected);
+            }
+        }
     }
 }
