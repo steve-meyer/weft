@@ -30,14 +30,9 @@
 
 	<methodlist>
 
-		<method name='list'>
-			<digest>In left inlet, sets the primary sequence; in right inlet, sets the shift sequence that transforms the primary sequence</digest>
-			<description>In left inlet, sets the primary sequence; in right inlet, sets the shift sequence that transforms the primary sequence. </description>
-		</method>
-
 		<method name='bang'>
-			<digest>Send out the shifted sequence </digest>
-			<description>Send out the shifted sequence </description>
+			<digest>Send out the shifted sequence</digest>
+			<description>Send out the shifted sequence. </description>
 		</method>
 
 	</methodlist>
@@ -46,6 +41,16 @@
 	<!--ATTRIBUTES-->
 
 	<attributelist>
+
+		<attribute name='shift_pattern' get='1' set='1' type='float64' size='1' >
+			<digest>The shift pattern used to transform the primary sequence</digest>
+			<description>The shift pattern used to transform the primary sequence. </description>
+		</attribute>
+
+		<attribute name='sequence' get='1' set='1' type='float64' size='1' >
+			<digest>The primary sequence to shift</digest>
+			<description>The primary sequence to shift. </description>
+		</attribute>
 
 	</attributelist>
 
