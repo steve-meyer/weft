@@ -16,61 +16,54 @@ public:
     MIN_AUTHOR      {"Steve Meyer"};
     MIN_RELATED     {"zl"};
 
-    inlet<>  input_l { this, "(bang) send out transformed sequence; (list) set the primary sequence." };
-    inlet<>  input_r { this, "(list) set the repeats pattern." };
-    outlet<> output  { this, "(list) the transformed sequence as a list." };
+
+    inlet<>  input  { this, "(bang) send out transformed sequence; (list) set the primary sequence." };
+    outlet<> output { this, "(list) the transformed sequence as a list." };
 
 
-    message<threadsafe::yes> bang { this, "bang", "Send out the transformed sequence with repeats applied.",
-        MIN_FUNCTION {
-            lock  lock {m_mutex};
-            atoms sequence_copy = m_sequence;
-            lock.unlock();
-            
-            if (m_repeats.size() > 0) {
-                atoms transformed_seq;
-                for (int i = 0; i < sequence_copy.size(); i++) {
-                    atom current_step = sequence_copy[i];
-                    int repeat_step = m_repeats[i % m_repeats.size()];
-                    for (int j = 0; j < repeat_step; j++) {
-                        transformed_seq.push_back(current_step);
-                    }
-                }
-                output.send(transformed_seq);
-            } else {
-                cwarn << "No repeats pattern set. Outputting unmodified sequence." << endl;
-                output.send(sequence_copy);
-            }
-            return {};
-        }
+    attribute< vector<int> > sequence { this, "sequence", {0}, description {"The primary sequence to transform."},
+        setter { MIN_FUNCTION {
+            if (args.size() == 0 || !only_ints(args))
+                return this->sequence;
+            else
+                return args;
+        }}
     };
 
 
-    message<threadsafe::yes> list { this, "list", "In left inlet, sets the primary sequence; in right inlet, sets the repeats pattern that transforms the primary sequence.",
-        MIN_FUNCTION {
+    attribute< vector<int> > repeats_pattern { this, "repeats", {1}, description {"The repeats pattern used to transform the primary sequence."},
+        setter { MIN_FUNCTION {
+            if (args.size() == 0 || !only_ints(args))
+                return this->repeats_pattern;
+            else
+                return args;
+        }}
+    };
 
-            lock lock {m_mutex};
-            if (inlet == 0) {
-                m_sequence.clear();
-                m_sequence.reserve(args.size());
-                m_sequence.insert(m_sequence.end(), args.begin(), args.end());
-            } else {
-                if (only_ints(args)) {
-                    m_repeats.clear();
-                    m_repeats.reserve(args.size());
-                    m_repeats.insert(m_repeats.end(), args.begin(), args.end());
-                }
-                else
-                    cerr << "A repeats pattern must only consist of integers." << endl;
+
+    message<> bang { this, "bang", "Send out the transformed sequence with repeats applied.",
+        MIN_FUNCTION {
+            lock  lock {m_mutex};
+
+            atoms transformed_seq;
+            vector<int> seq     = from_atoms<std::vector<int>>(this->sequence);
+            vector<int> repeats = from_atoms<std::vector<int>>(this->repeats_pattern);
+
+            for (int i = 0; i < seq.size(); i++) {
+                atom current_step = seq[i];
+                int repeat_step   = repeats[i % repeats.size()];
+                for (int j = 0; j < repeat_step; j++)
+                    transformed_seq.push_back(current_step);
             }
+
+            lock.unlock();
+            output.send(transformed_seq);
             return {};
         }
     };
 
 
 private:
-    atoms m_sequence;
-    atoms m_repeats;
     mutex m_mutex;
 };
 
