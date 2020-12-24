@@ -48,34 +48,15 @@ public:
     };
 
 
-    message<> bang { this, "bang", "Send out the transformed sequence with repeats applied.",
+    message<> bang { this, "bang", "Send out the transformed sequence with rhythm applied.",
         MIN_FUNCTION {
             lock  lock {m_mutex};
 
             atoms transformed_seq;
             vector<int> seq   = from_atoms<std::vector<int>>(this->sequence);
             vector<int> rhythm = from_atoms<std::vector<int>>(this->rhythm_pattern);
-             
 
-            int length;
-            if (this->length >= 1)
-                // If a length greater than or equal to 1 has been specified, use it.
-                length = this->length;
-            else
-                // Otherwise calculate the length by applying the rhythmic transformation to all steps in the sequence
-                length = calculate_length(seq, rhythm);
-
-            int processed_step_index = 0;
-            for (int i = 0; i < length; i++) {
-                int rhythm_step = rhythm[i % rhythm.size()];
-
-                if (rhythm_step == 0 || (processed_step_index >= seq.size() && this->fill_mode == symbol("silence")))
-                    transformed_seq.push_back(0);
-                else {
-                    transformed_seq.push_back(seq[processed_step_index % seq.size()]);
-                    processed_step_index++;
-                }
-            }
+            apply_rhythm(&transformed_seq, seq, rhythm, this->length, this->fill_mode);
 
             lock.unlock();
             output.send(transformed_seq);

@@ -50,7 +50,25 @@ SCENARIO("Object produces correct output") {
                  REQUIRE(output[0] == expected);
              }
          }
+
+         WHEN("it is given melody number IV and it is banged") {
+             atom melody = "IV";
+             my_object.melody = melody;
+             my_object.bang();
     
+             THEN("the transformed sequence is returned") {
+                 auto& output = *c74::max::object_getoutput(my_object, 0);
+                 atoms expected = {
+                                 1, 0,          2, 0,          3, 0,          4, 0,
+                              1, 2, 0,       3, 4, 0,       1, 2, 0,       3, 4, 0,
+                           1, 2, 3, 0,    4, 1, 2, 0,    3, 4, 1, 0,    2, 3, 4, 0,
+                        1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0
+                 };
+                 REQUIRE(output.size() == 1);
+                 REQUIRE(output[0] == expected);
+             }
+         }
+
     //     WHEN("the sequence that is not a multiple of the gates pattern") {
     //         atoms sequence = {1, 1, 5, 5, 7};
     //         atoms gates = {1, 0, 0};
