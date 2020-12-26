@@ -19,9 +19,15 @@ public:
 
     inlet<>  input  { this, "(bang) send out transformed sequence" };
     outlet<> output { this, "(list) the transformed sequence as a list." };
-    
-    
-    attribute<symbol> melody { this, "melody", "XI", description {"The rational melody number (in roman numerals)."} };
+
+
+    enum class melodies : int { iv, xi, enum_count };
+
+    enum_map melodies_range = {"iv", "xi"};
+
+    attribute<melodies> melody {this, "melody", melodies::xi, melodies_range,
+        description {"The rational melody number (in lowercase roman numerals)."}
+    };
 
 
     attribute< vector<int> > sequence { this, "sequence", {0}, description {"The primary sequence to transform."},
@@ -37,15 +43,19 @@ public:
     message<> bang { this, "bang", "Send out the transformed sequence with rational melody algorithm applied.",
         MIN_FUNCTION {
             lock  lock {m_mutex};
-
             atoms transformed_seq;
-            if (this->melody == symbol("XI"))
-            {
-                melody_xi(transformed_seq);
-            }
-            else if (this->melody == symbol("IV"))
-            {
-                melody_iv(transformed_seq);
+
+            switch(melody) {
+                case melodies::xi: {
+                    melody_xi(transformed_seq);
+                    break;
+                }
+                case melodies::iv: {
+                    melody_iv(transformed_seq);
+                    break;
+                }
+                case melodies::enum_count:
+                    break;
             }
 
             lock.unlock();

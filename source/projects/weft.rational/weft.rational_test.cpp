@@ -16,26 +16,9 @@ SCENARIO("Object produces correct output") {
          rational&             my_object = an_instance;
          atoms sequence = {1, 2, 3, 4};
          my_object.sequence = sequence;
-    
-//         WHEN("it is given a gate pattern with non-integers and it is banged") {
-//             atoms gates;
-//             gates.push_back(1);
-//             gates.push_back("string");
-//             gates.push_back(0);
-//             my_object.gates_pattern = gates;
-//             my_object.bang();
-//
-//             THEN("the gates are not stored and the original transformation is returned") {
-//                 auto& output = *c74::max::object_getoutput(my_object, 0);
-//                 atoms expected = {1, 1, 5, 5, 6, 6};
-//                 REQUIRE(output.size() == 1);
-//                 REQUIRE(output[0] == expected);
-//             }
-//         }
 
          WHEN("it is given melody number XI and it is banged") {
-             atom melody = "XI";
-             my_object.melody = melody;
+             my_object.melody = rational::melodies::xi;
              my_object.bang();
     
              THEN("the transformed sequence is returned") {
@@ -52,8 +35,7 @@ SCENARIO("Object produces correct output") {
          }
 
          WHEN("it is given melody number IV and it is banged") {
-             atom melody = "IV";
-             my_object.melody = melody;
+             my_object.melody = rational::melodies::iv;
              my_object.bang();
     
              THEN("the transformed sequence is returned") {
@@ -68,35 +50,5 @@ SCENARIO("Object produces correct output") {
                  REQUIRE(output[0] == expected);
              }
          }
-
-    //     WHEN("the sequence that is not a multiple of the gates pattern") {
-    //         atoms sequence = {1, 1, 5, 5, 7};
-    //         atoms gates = {1, 0, 0};
-    //         my_object.sequence = sequence;
-    //         my_object.gates_pattern = gates;
-    //         my_object.bang();
-    //
-    //         THEN("the gates are applied to the steps in the sequence") {
-    //             auto& output = *c74::max::object_getoutput(my_object, 0);
-    //             atoms expected = {1, 0, 0, 5, 0};
-    //             REQUIRE(output.size() == 1);
-    //             REQUIRE(output[0] == expected);
-    //         }
-    //     }
-    //
-    //     WHEN("the sequence is shorter than the gates pattern") {
-    //         atoms sequence = {1, 5};
-    //         atoms gates = {1, 0, 0};
-    //         my_object.sequence = sequence;
-    //         my_object.gates_pattern = gates;
-    //         my_object.bang();
-    //
-    //         THEN("the gates are applied to the steps in the sequence") {
-    //             auto& output = *c74::max::object_getoutput(my_object, 0);
-    //             atoms expected = {1, 0};
-    //             REQUIRE(output.size() == 1);
-    //             REQUIRE(output[0] == expected);
-    //         }
-    //     }
      }
 }
