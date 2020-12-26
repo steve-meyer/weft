@@ -36,15 +36,20 @@ public:
 
     message<> bang { this, "bang", "Send out the transformed sequence with rational melody algorithm applied.",
         MIN_FUNCTION {
+            lock  lock {m_mutex};
 
+            atoms transformed_seq;
             if (this->melody == symbol("XI"))
             {
-                melody_xi();
+                melody_xi(transformed_seq);
             }
             else if (this->melody == symbol("IV"))
             {
-                melody_iv();
+                melody_iv(transformed_seq);
             }
+
+            lock.unlock();
+            output.send(transformed_seq);
             return {};
         }
     };
@@ -53,10 +58,8 @@ public:
 private:
     mutex m_mutex;
 
-    void melody_xi() {
-        lock  lock {m_mutex};
+    void melody_xi(atoms& transformed_seq) {
 
-        atoms transformed_seq;
         vector<int> seq   = from_atoms<std::vector<int>>(this->sequence);
         int segment_length = seq.size() / 2 + 1;
 
@@ -71,17 +74,12 @@ private:
             for (int index = 0; index < segment_length - 1; index++)
                 transformed_seq.push_back( transformed_seq[transformed_seq.size() - 1 - index - index] );
         }
-
-        lock.unlock();
-        output.send(transformed_seq);
     }
 
 
-    void melody_iv() {
-        lock  lock {m_mutex};
+    void melody_iv(atoms& transformed_seq) {
 
-        atoms transformed_seq;
-        vector<int> seq   = from_atoms<std::vector<int>>(this->sequence);
+        vector<int> seq = from_atoms<std::vector<int>>(this->sequence);
 
         for (int segment = 1; segment <= seq.size(); segment++) {
 
@@ -91,11 +89,8 @@ private:
             rhythm.push_back(0);
 
             int length = seq.size() * (segment + 1);
-            apply_rhythm(&transformed_seq, seq, rhythm, length, symbol("wrap"));
+            apply_rhythm(transformed_seq, seq, rhythm, length, symbol("wrap"));
         }
-
-        lock.unlock();
-        output.send(transformed_seq);
     }
 };
 

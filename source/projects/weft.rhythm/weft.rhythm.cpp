@@ -56,7 +56,7 @@ public:
             vector<int> seq   = from_atoms<std::vector<int>>(this->sequence);
             vector<int> rhythm = from_atoms<std::vector<int>>(this->rhythm_pattern);
 
-            apply_rhythm(&transformed_seq, seq, rhythm, this->length, this->fill_mode);
+            apply_rhythm(transformed_seq, seq, rhythm, this->length, this->fill_mode);
 
             lock.unlock();
             output.send(transformed_seq);

@@ -46,7 +46,7 @@ int calculate_length(const vector<int> &seq, const vector<int> &rhythm) {
 }
 
 
-void apply_rhythm(atoms *transformed_seq, const vector<int> &seq, const vector<int> &rhythm, const int &length, const symbol fill_mode) {
+void apply_rhythm(atoms &transformed_seq, const vector<int> &seq, const vector<int> &rhythm, const int &length, const symbol fill_mode) {
 
     int transformed_seq_length;
     if (length >= 1)
@@ -61,9 +61,9 @@ void apply_rhythm(atoms *transformed_seq, const vector<int> &seq, const vector<i
         int rhythm_step = rhythm[i % rhythm.size()];
 
         if (rhythm_step == 0 || (processed_step_index >= seq.size() && fill_mode == symbol("silence")))
-            transformed_seq->push_back(0);
+            transformed_seq.push_back(0);
         else {
-            transformed_seq->push_back(seq[processed_step_index % seq.size()]);
+            transformed_seq.push_back(seq[processed_step_index % seq.size()]);
             processed_step_index++;
         }
     }
