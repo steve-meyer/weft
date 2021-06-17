@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(Min-DevKit)
 
-enable_testing()
 
 string(REGEX REPLACE "(.*)/" "" THIS_PACKAGE_NAME "${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -26,6 +25,11 @@ execute_process(
 include(${CMAKE_CURRENT_SOURCE_DIR}/source/min-api/script/min-package.cmake)
 
 
+# Add unit tests for the API
+enable_testing()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/source/min-api)
+
+
 # Add the Lib, if it exists
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/source/min-lib/CMakeLists.txt")
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/source/min-lib)
@@ -40,6 +44,3 @@ foreach (project_dir ${PROJECT_DIRS})
         add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/source/projects/${project_dir})
     endif ()
 endforeach ()
-
-# Comment the line below if you want automatic cmake regneration enabled
-set(CMAKE_SUPPRESS_REGENERATION true)
