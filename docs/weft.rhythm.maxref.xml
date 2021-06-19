@@ -31,8 +31,8 @@
 	<methodlist>
 
 		<method name='bang'>
-			<digest>Send out the transformed sequence with repeats applied</digest>
-			<description>Send out the transformed sequence with repeats applied. </description>
+			<digest>Send out the transformed sequence with rhythm applied</digest>
+			<description>Send out the transformed sequence with rhythm applied. </description>
 		</method>
 
 	</methodlist>
