@@ -21,9 +21,9 @@ public:
     outlet<> output { this, "(list) the transformed sequence as a list." };
 
 
-    enum class melodies : int { iv, xi, xv, enum_count };
+    enum class melodies : int { iv, xi, xv, xvi, enum_count };
 
-    enum_map melodies_range = {"iv", "xi", "xv"};
+    enum_map melodies_range = {"iv", "xi", "xv", "xvi"};
 
     attribute<melodies> melody {this, "melody", melodies::xi, melodies_range,
         description {"The rational melody number (in lowercase roman numerals)."}
@@ -56,6 +56,10 @@ public:
                 }
                 case melodies::xv: {
                     melody_xv(transformed_seq);
+                    break;
+                }
+                case melodies::xvi: {
+                    melody_xvi(transformed_seq);
                     break;
                 }
                 case melodies::enum_count:
@@ -191,6 +195,57 @@ private:
         int step = 0;
         while (step < seq_steps & rational_melody[step] != -1) { step++; }
         return step >= seq_steps;
+    }
+
+
+    void melody_xvi(atoms& transformed_seq) {
+
+        vector<int> seq = from_atoms<std::vector<int>>(this->sequence);
+
+        if (seq.size() < 2) {
+            transformed_seq.push_back(seq[0]);
+        } else {
+            atoms seq_indices;
+            atoms first_segment = {0, 1, 0};
+            append_segment(seq_indices, first_segment);
+
+            atoms prev_segment;
+            append_segment(prev_segment, first_segment);
+
+            for (int i = 2; i < seq.size(); i++) {
+                int prev_segment_idx = 0;
+                atoms next_segment;
+                int next_length = pow(2, i) + 1;
+
+                for (int j = 0; j < next_length; j++) {
+                    if (j % 2 == 0) {
+                        next_segment.push_back(prev_segment[prev_segment_idx]);
+                        prev_segment_idx++;
+                    } else {
+                        int neighbors[] = { next_segment[j - 1], prev_segment[prev_segment_idx] };
+                        std::sort(neighbors, neighbors + 2);
+
+                        if (neighbors[1] - neighbors[0] == 1)
+                            next_segment.push_back(neighbors[1] + 1);
+                        else
+                            next_segment.push_back(neighbors[1] - 1);
+                    }
+                }
+
+                append_segment(seq_indices, next_segment);
+                prev_segment.clear();
+                append_segment(prev_segment, next_segment);
+            }
+
+            for (int i = 0; i < seq_indices.size(); i++)
+                transformed_seq.push_back(seq[seq_indices[i]]);
+        }
+    }
+
+
+    void append_segment(atoms& append_to, atoms& append_from) {
+        for (int i = 0; i < append_from.size(); i++)
+            append_to.push_back(append_from[i]);
     }
 };
 

@@ -73,5 +73,84 @@ SCENARIO("Object produces correct output") {
                  REQUIRE(output[0] == expected);
              }
          }
+
+         WHEN("it is given melody number XVI and it is banged") {
+             my_object.melody = rational::melodies::xvi;
+
+             AND_WHEN("the sequence has a length of 1") {
+                 atoms sequence = {1};
+                 my_object.sequence = sequence;
+                 my_object.bang();
+
+                 THEN("the transformed sequence is returned") {
+                     auto& output = *c74::max::object_getoutput(my_object, 0);
+                     atoms expected = { 1 };
+                     REQUIRE(output.size() == 1);
+                     REQUIRE(output[0] == expected);
+                 }
+             }
+
+             AND_WHEN("the sequence has a length of 2") {
+                 atoms sequence = {1, 2};
+                 my_object.sequence = sequence;
+                 my_object.bang();
+
+                 THEN("the transformed sequence is returned") {
+                     auto& output = *c74::max::object_getoutput(my_object, 0);
+                     atoms expected = { 1, 2, 1 };
+                     REQUIRE(output.size() == 1);
+                     REQUIRE(output[0] == expected);
+                 }
+             }
+
+             AND_WHEN("the sequence has a length of 3") {
+                 atoms sequence = {1, 2, 3};
+                 my_object.sequence = sequence;
+                 my_object.bang();
+
+                 THEN("the transformed sequence is returned") {
+                     auto& output = *c74::max::object_getoutput(my_object, 0);
+                     atoms expected = {
+                         1,    2,    1,
+                         1, 3, 2, 3, 1
+                     };
+                     REQUIRE(output.size() == 1);
+                     REQUIRE(output[0] == expected);
+                 }
+             }
+
+             AND_WHEN("the sequence has a length of 4") {
+                 atoms sequence = {1, 2, 3, 4};
+                 my_object.sequence = sequence;
+                 my_object.bang();
+
+                 THEN("the transformed sequence is returned") {
+                     auto& output = *c74::max::object_getoutput(my_object, 0);
+                     atoms expected = {
+                         1,          2,          1,
+                         1,    3,    2,    3,    1,
+                         1, 2, 3, 4, 2, 4, 3, 2, 1
+                     };
+                     REQUIRE(output.size() == 1);
+                     REQUIRE(output[0] == expected);
+                 }
+             }
+
+             AND_WHEN("the sequence has a non-sequential pattern") {
+                 atoms sequence = {2, 5, 1};
+                 my_object.sequence = sequence;
+                 my_object.bang();
+
+                 THEN("the transformed sequence is returned") {
+                     auto& output = *c74::max::object_getoutput(my_object, 0);
+                     atoms expected = {
+                         2,    5,    2,
+                         2, 1, 5, 1, 2
+                     };
+                     REQUIRE(output.size() == 1);
+                     REQUIRE(output[0] == expected);
+                 }
+             }
+         }
      }
 }
